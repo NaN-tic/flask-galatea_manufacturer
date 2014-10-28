@@ -9,7 +9,7 @@ manufacturer = Blueprint('manufacturer', __name__, template_folder='templates')
 DISPLAY_MSG = lazy_gettext('Displaying <b>{start} - {end}</b> of <b>{total}</b>')
 
 GALATEA_WEBSITE = current_app.config.get('TRYTON_GALATEA_SITE')
-SHOPS = current_app.config.get('TRYTON_SALE_SHOPS')
+SHOP = current_app.config.get('TRYTON_SALE_SHOP')
 LIMIT = current_app.config.get('TRYTON_PAGINATION_CATALOG_LIMIT', 20)
 
 Website = tryton.pool.get('galatea.website')
@@ -77,7 +77,7 @@ def manufacturer_products(lang, slug):
     domain = [
         ('esale_available', '=', True),
         ('esale_active', '=', True),
-        ('esale_saleshops', 'in', SHOPS),
+        ('esale_saleshops', 'in', [SHOP]),
         ('manufacturer', '=', manufacturer.party.id),
         ]
     total = Template.search_count(domain)
