@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, current_app, abort, url_for, g, \
-    request, session
+    request, session, redirect
 from flask.ext.paginate import Pagination
 from flask.ext.babel import gettext as _, lazy_gettext
 from galatea.tryton import tryton
@@ -48,7 +48,8 @@ def manufacturer_products(lang, slug):
             manufacturer = m
             break
     if not manufacturer:
-        abort(404)
+        # change 404 to all manufacturer list
+        return redirect(url_for('.manufacturer_'+g.language, lang=g.language))
 
     # limit
     if request.args.get('limit'):
