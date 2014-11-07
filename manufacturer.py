@@ -17,18 +17,19 @@ WebSiteManufacturer = tryton.pool.get('galatea.website')
 Template = tryton.pool.get('product.template')
 Product = tryton.pool.get('product.product')
 
-CATALOG_TEMPLATE_FIELD_NAMES = [
+MANUFACTURER_TEMPLATE_FIELD_NAMES = [
     'name', 'esale_slug', 'esale_shortdescription', 'esale_price',
     'esale_default_images', 'esale_all_images', 'esale_new', 'esale_hot',
     'esale_sequence',
     ]
-CATALOG_PRODUCT_FIELD_NAMES = [
+MANUFACTURER_PRODUCT_FIELD_NAMES = [
     'code', 'template',
     ]
+MANUFACTURER_TEMPLATE_FILTERS = []
 
-@manufacturer.route("/manufacturer/<slug>", endpoint="manufacturer_product_en")
-@manufacturer.route("/fabricante/<slug>", endpoint="manufacturer_product_es")
-@manufacturer.route("/fabricant/<slug>", endpoint="manufacturer_product_ca")
+@manufacturer.route("/manufacturer/<slug>", methods=["GET", "POST"], endpoint="manufacturer_product_en")
+@manufacturer.route("/fabricante/<slug>", methods=["GET", "POST"], endpoint="manufacturer_product_es")
+@manufacturer.route("/fabricant/<slug>", methods=["GET", "POST"], endpoint="manufacturer_product_ca")
 @tryton.transaction()
 def manufacturer_products(lang, slug):
     '''Products by manufacturer'''
@@ -75,19 +76,32 @@ def manufacturer_products(lang, slug):
     except ValueError:
         page = 1
 
+    domain_filter = session.get('manufacturer_filter', [])
+    if request.form:
+        domain_filter = []
+        domain_filter_keys = set()
+        for k, v in request.form.iteritems():
+            if k in MANUFACTURER_TEMPLATE_FILTERS:
+                domain_filter_keys.add(k)
+
+        for k in list(domain_filter_keys):
+            domain_filter.append((k, 'in', request.form.getlist(k)))
+
+    session['manufacturer_filter'] = domain_filter
+
     domain = [
         ('esale_available', '=', True),
         ('esale_active', '=', True),
         ('esale_saleshops', 'in', [SHOP]),
         ('manufacturer', '=', manufacturer.party.id),
-        ]
+        ] + domain_filter
     total = Template.search_count(domain)
     offset = (page-1)*limit
 
-    tpls = Template.search_read(domain, offset, limit, order, CATALOG_TEMPLATE_FIELD_NAMES)
+    tpls = Template.search_read(domain, offset, limit, order, MANUFACTURER_TEMPLATE_FIELD_NAMES)
 
     product_domain = [('template', 'in', [tpl['id'] for tpl in tpls])]
-    prds = Product.search_read(product_domain, fields_names=CATALOG_PRODUCT_FIELD_NAMES)
+    prds = Product.search_read(product_domain, fields_names=MANUFACTURER_PRODUCT_FIELD_NAMES)
 
     products = []
     for tpl in tpls:
