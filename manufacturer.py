@@ -18,12 +18,12 @@ Template = tryton.pool.get('product.template')
 Product = tryton.pool.get('product.product')
 
 MANUFACTURER_TEMPLATE_FIELD_NAMES = [
-    'name', 'esale_slug', 'esale_shortdescription', 'esale_price',
+    'name', 'code', 'esale_slug', 'esale_shortdescription', 'esale_price',
     'esale_default_images', 'esale_all_images', 'esale_new', 'esale_hot',
-    'esale_sequence',
+    'esale_sequence', 'template_attributes', 'products',
     ]
 MANUFACTURER_PRODUCT_FIELD_NAMES = [
-    'code', 'template',
+    'code', 'template', 'attributes', 'add_cart', 'quantity', 'forecast_quantity',
     ]
 MANUFACTURER_TEMPLATE_FILTERS = []
 
