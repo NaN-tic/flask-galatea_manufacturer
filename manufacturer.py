@@ -23,7 +23,8 @@ MANUFACTURER_TEMPLATE_FIELD_NAMES = [
     'esale_sequence', 'template_attributes', 'products',
     ]
 MANUFACTURER_PRODUCT_FIELD_NAMES = [
-    'code', 'template', 'attributes', 'add_cart', 'quantity', 'forecast_quantity',
+    'code', 'template', 'attributes', 'add_cart',
+    'esale_quantity', 'esale_forecast_quantity',
     ]
 MANUFACTURER_TEMPLATE_FILTERS = []
 
