@@ -17,15 +17,6 @@ WebSiteManufacturer = tryton.pool.get('galatea.website')
 Template = tryton.pool.get('product.template')
 Product = tryton.pool.get('product.product')
 
-MANUFACTURER_TEMPLATE_FIELD_NAMES = [
-    'name', 'code', 'esale_slug', 'esale_shortdescription', 'esale_price',
-    'esale_default_images', 'esale_all_images', 'esale_new', 'esale_hot',
-    'esale_sequence', 'template_attributes', 'products',
-    ]
-MANUFACTURER_PRODUCT_FIELD_NAMES = [
-    'code', 'template', 'attributes', 'add_cart',
-    'esale_quantity', 'esale_forecast_quantity',
-    ]
 MANUFACTURER_TEMPLATE_FILTERS = []
 
 @manufacturer.route("/manufacturer/<slug>", methods=["GET", "POST"], endpoint="manufacturer_product_en")
@@ -99,19 +90,7 @@ def manufacturer_products(lang, slug):
     total = Template.search_count(domain)
     offset = (page-1)*limit
 
-    tpls = Template.search_read(domain, offset, limit, order, MANUFACTURER_TEMPLATE_FIELD_NAMES)
-
-    product_domain = [('template', 'in', [tpl['id'] for tpl in tpls])]
-    prds = Product.search_read(product_domain, fields_names=MANUFACTURER_PRODUCT_FIELD_NAMES)
-
-    products = []
-    for tpl in tpls:
-        prods = []
-        for prd in prds:
-            if prd['template'] == tpl['id']:
-                prods.append(prd)
-        tpl['products'] = prods
-        products.append(tpl)
+    products = Template.search(domain, offset, limit, order)
 
     pagination = Pagination(page=page, total=total, per_page=limit, display_msg=DISPLAY_MSG, bs_version='3')
 
@@ -142,10 +121,11 @@ def manufacturer_products(lang, slug):
 @tryton.transaction()
 def manufacturer_all(lang):
     '''All manufacturers'''
-
+    print "AQUI============"
     websites = Website.search([
         ('id', '=', GALATEA_WEBSITE),
         ], limit=1)
+    print websites
     if not websites:
         abort(404)
     website, = websites
