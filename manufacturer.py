@@ -121,11 +121,9 @@ def manufacturer_products(lang, slug):
 @tryton.transaction()
 def manufacturer_all(lang):
     '''All manufacturers'''
-    print "AQUI============"
     websites = Website.search([
         ('id', '=', GALATEA_WEBSITE),
         ], limit=1)
-    print websites
     if not websites:
         abort(404)
     website, = websites
