@@ -61,7 +61,7 @@ def manufacturer_products(lang, slug):
             view = 'list'
         session['catalog_view'] = view
 
-    order = []
+    order = [('name', 'ASC')]
 
     try:
         page = int(request.args.get('page', 1))
