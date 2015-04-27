@@ -84,7 +84,7 @@ def manufacturer_products(lang, slug):
     domain = [
         ('esale_available', '=', True),
         ('esale_active', '=', True),
-        ('esale_saleshops', 'in', [SHOP]),
+        ('shops', 'in', [SHOP]),
         ('manufacturer', '=', manufacturer.party.id),
         ] + domain_filter
     total = Template.search_count(domain)
