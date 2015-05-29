@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, current_app, abort, url_for, g, \
 from flask.ext.paginate import Pagination
 from flask.ext.babel import gettext as _, lazy_gettext
 from galatea.tryton import tryton
+from catalog.catalog import catalog_ordered
 
 manufacturer = Blueprint('manufacturer', __name__, template_folder='templates')
 
@@ -61,8 +62,6 @@ def manufacturer_products(lang, slug):
             view = 'list'
         session['catalog_view'] = view
 
-    order = [('name', 'ASC')]
-
     try:
         page = int(request.args.get('page', 1))
     except ValueError:
@@ -90,7 +89,7 @@ def manufacturer_products(lang, slug):
     total = Template.search_count(domain)
     offset = (page-1)*limit
 
-    products = Template.search(domain, offset, limit, order)
+    products = Template.search(domain, offset, limit, order=catalog_ordered())
 
     pagination = Pagination(page=page, total=total, per_page=limit, display_msg=DISPLAY_MSG, bs_version='3')
 
