@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, current_app, abort, url_for, g, \
     request, session, redirect
-from flask.ext.paginate import Pagination
-from flask.ext.babel import gettext as _, lazy_gettext
+from flask_paginate import Pagination
+from flask_babel import gettext as _, lazy_gettext
 from galatea.tryton import tryton
 from catalog.catalog import catalog_ordered
 
