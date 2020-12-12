@@ -71,7 +71,7 @@ def manufacturer_products(lang, slug):
     if request.form:
         domain_filter = []
         domain_filter_keys = set()
-        for k, v in request.form.iteritems():
+        for k, v in request.form.items():
             if k in MANUFACTURER_TEMPLATE_FILTERS:
                 domain_filter_keys.add(k)
 

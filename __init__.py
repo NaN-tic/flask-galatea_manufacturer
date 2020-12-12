@@ -1,2 +1,1 @@
-from manufacturer import *
-
+from .manufacturer import *
